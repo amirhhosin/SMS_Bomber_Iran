@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+*.pyo
+*.log
+proxies.txt
+targets.txt
+*.mp3
+*.wav
