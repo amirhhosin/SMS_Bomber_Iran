@@ -1,117 +1,102 @@
-# ☠️ SMS BOMBER v3.0 — HACKER EDITION
+# ☠️ SMS BOMBER v3.0 - HACKER EDITION
 
 <div align="center">
-
-<img src="https://img.shields.io/badge/Version-3.0-red?style=for-the-badge&logo=github" alt="Version">
-<img src="https://img.shields.io/badge/Python-3.10+-green?style=for-the-badge&logo=python" alt="Python">
-<img src="https://img.shields.io/badge/Platform-Termux-red?style=for-the-badge&logo=android" alt="Platform">
-<img src="https://img.shields.io/badge/License-Educational-purple?style=for-the-badge" alt="License">
-
-<br><br>
-
-**Cyberpunk Web Interface & API Testing Demo**
-
+  <img src="https://img.shields.io/badge/Version-3.0-red?style=for-the-badge&logo=github" alt="Version">
+  <img src="https://img.shields.io/badge/Python-3.10+-green?style=for-the-badge&logo=python" alt="Python">
+  <img src="https://img.shields.io/badge/Platform-Termux-red?style=for-the-badge&logo=android" alt="Platform">
+  <img src="https://img.shields.io/badge/License-Educational-purple?style=for-the-badge" alt="License">
 </div>
 
 ---
 
 ## ☠️ About
 
-**SMS BOMBER v3.0** یک پروژه آموزشی برای آشنایی با ساختار ابزارهای
-تست API، رابط‌های وب و اجرای درخواست‌های آزمایشی در محیط محلی است.
+**SMS BOMBER v3.0** یک ابزار برای ارسال درخواست OTP به ۸۰+ سرویس مختلف به صورت همزمان است. دارای تم گرافیکی، قابلیت مولتی‌ترد، پشتیبانی از پروکسی و **رابط کاربری وب**.
 
-این نسخه برای استفاده در **محیط تست و سرویس‌های تحت کنترل خودتان** طراحی شده
-و هیچ پیام واقعی برای اشخاص یا سرویس‌های شخص ثالث ارسال نمی‌کند.
-
----
-
-## 🔥 Features
+### 🔥 Features
 
 | ویژگی | توضیح |
-|---|---|
-| 🖥️ **Web Interface** | رابط کاربری مدرن با Flask |
-| 💻 **CLI** | اجرای پروژه از طریق ترمینال |
-| 🧪 **API Testing** | شبیه‌سازی درخواست‌ها در محیط آزمایشی |
-| 🧵 **Multi-Thread Demo** | نمایش مفهوم اجرای همزمان در محیط تست |
-| 📱 **Mobile Friendly** | مناسب برای Termux و مرورگر موبایل |
-| 🎨 **Cyberpunk UI** | رابط کاربری با تم Neon/Cyberpunk |
-| 📊 **Console Logs** | نمایش وضعیت اجرای تست‌ها |
+| :--- | :--- |
+| 💀 **۸۰+ سرویس** | پشتیبانی از اکثر سرویس‌های محبوب |
+| 🔥 **مولتی‌ترد** | تنظیم ۱ تا ۳۰ ترد همزمان |
+| 🩸 **پروکسی** | استفاده از پروکسی‌های فایل `proxies.txt` |
+| 📱 **چند شماره** | پشتیبانی از ۳ شماره همزمان |
+| 🎯 **تم جذاب** | طراحی مدرن و حرفه‌ای |
+| 🌐 **رابط کاربری وب** | اجرا از طریق مرورگر با Flask |
+| 💻 **خط فرمان** | اجرا مستقیم از ترمینال |
 
 ---
 
 ## 📦 Installation
 
-### Termux
+### Termux (Android)
 
 ```bash
+# Clone repository
 git clone https://github.com/amirhhosin/SMS_Bomber_Iran.git
-
 cd SMS_Bomber_Iran
 
+# Run installer
 bash setup.sh
+
+# Start tool
+python main.py
 ```
 
 ---
 
-## 🚀 Usage
+## 🚀 How to Use
 
-### 🖥️ Web Mode
+### 1️⃣ Terminal Mode (CLI)
 
-اجرای رابط وب:
+```bash
+python main.py 09123456789 3 15
+```
+
+| پارامتر | توضیح |
+| :--- | :--- |
+| `09123456789` | شماره هدف |
+| `3` | تعداد درخواست (۱ تا ۵۰) |
+| `15` | تعداد ترد (۱ تا ۳۰) |
+
+### 2️⃣ Web Mode (UI)
 
 ```bash
 python app.py
 ```
 
-سپس مرورگر را باز کنید:
+سپس در مرورگر آدرس زیر را باز کنید:
 
 ```text
 http://127.0.0.1:5000
 ```
 
-### 💻 CLI Mode
-
-برای اجرای محیط آزمایشی:
+### 3️⃣ Interactive Mode
 
 ```bash
 python main.py
 ```
 
-> این پروژه در حالت Demo فقط درخواست‌های محلی/آزمایشی را شبیه‌سازی می‌کند.
+و طبق راهنمایی برنامه پیش بروید.
 
 ---
 
-## 🖥️ Web Interface
-
-رابط وب پروژه با تمرکز روی طراحی Cyberpunk ساخته شده است.
+## 🖥️ Web Interface Screenshot
 
 ```text
 ┌────────────────────────────────────────────────────────────┐
-│                                                            │
-│                 ☠️ CYBER CONSOLE                          │
-│                                                            │
-│              HACKER EDITION v3.0                           │
-│                                                            │
-│                 ● SYSTEM ONLINE                            │
-│                                                            │
+│  ☠️ SMS BOMBER                                            │
+│  HACKER EDITION v3.0 — by amirhhosin                     │
+│  🔴 READY FOR ATTACK                                     │
 ├────────────────────────────────────────────────────────────┤
-│                                                            │
-│  📱 شماره آزمایشی: 09123456789                             │
-│                                                            │
-│  ⚡ تعداد درخواست: 3                                       │
-│                                                            │
-│  🧵 Worker Threads: 5                                     │
-│                                                            │
-│              [ ▶ اجرای تست ]                              │
-│                                                            │
+│  📱 شماره هدف: 09123456789                                │
+│  ⚡ تعداد اسپم: 3                                        │
+│  🧵 تعداد ترد: 15                                       │
+│  [🔥 اجرای حمله]                                         │
 ├────────────────────────────────────────────────────────────┤
-│                                                            │
-│  TERMINAL OUTPUT                              ● LIVE       │
-│                                                            │
-│  > Initializing test environment...                        │
-│  > Running local simulation...                             │
-│  > Completed successfully.                                 │
-│                                                            │
+│  ATTACK LOG — amirhhosin                                 │
+│  ●  ●  ●                                                 │
+│  ✅ عملیات با موفقیت انجام شد!                           │
 └────────────────────────────────────────────────────────────┘
 ```
 
@@ -121,20 +106,17 @@ python main.py
 
 ```text
 SMS_Bomber_Iran/
-│
-├── main.py
-├── app.py
-│
+├── main.py            # اسکریپت اصلی (CLI)
+├── app.py             # سرور Flask (Web UI)
 ├── templates/
-│   └── index.html
-│
+│   └── index.html     # رابط کاربری وب
 ├── static/
-│   ├── logo.png
-│   └── click.mp3
-│
-├── requirements.txt
-├── setup.sh
-├── README.md
+│   ├── logo.png       # لوگو
+│   └── click.mp3      # صدای کلیک
+├── requirements.txt   # کتابخانه‌های مورد نیاز
+├── setup.sh           # نصب‌کننده خودکار
+├── proxies.txt        # لیست پروکسی (اختیاری)
+├── README.md          # راهنمای پروژه
 └── .gitignore
 ```
 
@@ -142,80 +124,50 @@ SMS_Bomber_Iran/
 
 ## 📦 Requirements
 
-```txt
+```text
 flask>=2.0.0
 requests>=2.31.0
 colorama>=0.4.6
+fake-useragent>=1.4.0
 urllib3>=2.0.0
 ```
 
 ### Termux Packages
 
 ```bash
-pkg update
-
-pkg install python
-
-pkg install termux-media-player
-
-pkg install sox
+pkg install python termux-speaker termux-media-player sox
 ```
-
----
-
-## 🧪 Testing
-
-برای تست پروژه از شماره‌ها و سرویس‌های واقعی دیگران استفاده نکنید.
-
-پیشنهاد می‌شود تست‌ها را با:
-
-- API محلی
-- Mock Server
-- شماره‌های آزمایشی
-- سرویس‌هایی که خودتان کنترل می‌کنید
-
-انجام دهید.
 
 ---
 
 ## ⚠️ Disclaimer
 
-> ☠️ **EDUCATIONAL PROJECT**
->
-> این پروژه صرفاً برای آموزش مفاهیم Python، Flask، API Testing،
-> Multi-threading و طراحی رابط کاربری ایجاد شده است.
->
-> استفاده از این پروژه علیه اشخاص، شماره‌ها یا سرویس‌هایی که
-> مالک آن نیستید مجاز نیست.
->
-> مسئولیت استفاده از پروژه بر عهده کاربر است.
+<div align="center">
+  <b>
+    <p style="color:red;">
+      ☠️ THIS TOOL IS FOR EDUCATIONAL PURPOSES ONLY ☠️
+    </p>
+    <p>
+      Any improper or illegal use is the responsibility of the individual.
+    </p>
+    <p>
+      The developer is not responsible for any misuse of this tool.
+    </p>
+  </b>
+</div>
 
 ---
 
-## 👨‍💻 Author
+## 📞 Contact
 
-**amirhhosin**
-
-- GitHub: `amirhhosin`
-- Telegram: `@amirhhosin`
-
----
-
-## 📜 License
-
-این پروژه با هدف آموزشی و آزمایشی منتشر شده است.
+* **Telegram:** [@amirhhosin](https://t.me/amirhhosin)
+* **GitHub:** [amirhhosin](https://github.com/amirhhosin)
 
 ---
 
 <div align="center">
-
-<img src="https://img.shields.io/badge/☠️-HACKER_EDITION-red?style=for-the-badge" alt="Hacker Edition">
-<img src="https://img.shields.io/badge/💀-CYBER_CONSOLE-black?style=for-the-badge" alt="Cyber Console">
-<img src="https://img.shields.io/badge/🔥-EDUCATIONAL-green?style=for-the-badge" alt="Educational">
-
-<br><br>
-
-**Built for learning. Designed for experimentation.**
-
+  <img src="https://img.shields.io/badge/☠️-HACKER_EDITION-red?style=for-the-badge" alt="Hacker Edition">
+  <img src="https://img.shields.io/badge/💀-ANONYMOUS-black?style=for-the-badge" alt="Anonymous">
+  <img src="https://img.shields.io/badge/🔥-LEGION-green?style=for-the-badge" alt="Legion">
 </div>
 
