@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>SMS Bomber — amirhhosin</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;800&display=swap');
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    background:
+        radial-gradient(circle at 20% 20%, rgba(0,255,204,.10), transparent 30%),
+        radial-gradient(circle at 80% 80%, rgba(0,170,255,.08), transparent 30%),
+        #050708;
+    color: #d9fff7;
+    font-family: 'Vazirmatn', sans-serif;
+    overflow-x: hidden;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+        linear-gradient(rgba(0,255,204,.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,255,204,.035) 1px, transparent 1px);
+    background-size: 40px 40px;
+    mask-image: linear-gradient(to bottom, black, transparent);
+}
+
+.main {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 25px;
+}
+
+.panel {
+    width: 100%;
+    max-width: 850px;
+    position: relative;
+    padding: 32px;
+    border: 1px solid rgba(0,255,204,.35);
+    border-radius: 24px;
+    background: rgba(8,15,16,.78);
+    backdrop-filter: blur(18px);
+    box-shadow:
+        0 0 50px rgba(0,255,204,.08),
+        inset 0 0 30px rgba(0,255,204,.025);
+}
+
+.panel::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 8%;
+    right: 8%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #00ffcc, transparent);
+    box-shadow: 0 0 15px #00ffcc;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 35px;
+}
+
+.logo {
+    width: 70px;
+    height: 70px;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 20px;
+    border: 1px solid rgba(0,255,204,.4);
+    background: rgba(0,255,204,.06);
+    box-shadow:
+        0 0 25px rgba(0,255,204,.15),
+        inset 0 0 20px rgba(0,255,204,.05);
+}
+
+.logo img {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+}
+
+.title {
+    margin-top: 18px;
+    margin-bottom: 8px;
+    font-size: 30px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    color: #eafffb;
+    text-shadow: 0 0 10px rgba(0,255,204,.5);
+}
+
+.subtitle {
+    color: #6f9992;
+    font-size: 13px;
+}
+
+.status {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 14px;
+    padding: 7px 14px;
+    border-radius: 30px;
+    background: rgba(0,255,204,.06);
+    border: 1px solid rgba(0,255,204,.25);
+    color: #00ffcc;
+    font-size: 12px;
+}
+
+.dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #00ffcc;
+    box-shadow: 0 0 10px #00ffcc;
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0%,100% { opacity: 1; }
+    50% { opacity: .35; }
+}
+
+label {
+    color: #a9d9d0;
+    font-size: 13px;
+    margin-bottom: 8px;
+}
+
+.form-control {
+    height: 48px;
+    background: rgba(0,0,0,.35) !important;
+    border: 1px solid rgba(0,255,204,.22) !important;
+    color: #00ffcc !important;
+    border-radius: 12px;
+    transition: .25s;
+}
+
+.form-control::placeholder {
+    color: #476660;
+}
+
+.form-control:focus {
+    border-color: #00ffcc !important;
+    box-shadow:
+        0 0 0 3px rgba(0,255,204,.06),
+        0 0 20px rgba(0,255,204,.12) !important;
+}
+
+.input-card {
+    padding: 18px;
+    background: rgba(255,255,255,.015);
+    border: 1px solid rgba(255,255,255,.04);
+    border-radius: 16px;
+    transition: .25s;
+}
+
+.input-card:hover {
+    border-color: rgba(0,255,204,.18);
+}
+
+.main-btn {
+    height: 54px;
+    border: 0;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #00ffcc, #00cfa9);
+    color: #03110e;
+    font-weight: 800;
+    font-size: 15px;
+    box-shadow: 0 0 20px rgba(0,255,204,.18);
+    transition: .25s;
+    position: relative;
+    overflow: hidden;
+}
+
+.main-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 30px rgba(0,255,204,.35);
+}
+
+.main-btn:active {
+    transform: scale(.98);
+}
+
+.console-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    color: #79a9a0;
+    font-size: 12px;
+}
+
+.console {
+    min-height: 170px;
+    max-height: 300px;
+    padding: 18px;
+    border-radius: 15px;
+    background: #020505;
+    border: 1px solid rgba(0,255,204,.18);
+    color: #00ffcc;
+    font-family: monospace;
+    font-size: 13px;
+    white-space: pre-wrap;
+    box-shadow: inset 0 0 25px rgba(0,0,0,.7);
+    overflow-y: auto;
+}
+
+.console::before {
+    content: "●  ●  ●";
+    display: block;
+    color: #345c55;
+    margin-bottom: 15px;
+    letter-spacing: 3px;
+}
+
+.footer {
+    text-align: center;
+    margin-top: 25px;
+    color: #42635e;
+    font-size: 11px;
+}
+
+.footer a {
+    color: #00ffcc;
+    text-decoration: none;
+}
+
+.footer a:hover {
+    text-decoration: underline;
+}
+
+@media(max-width:600px) {
+    .main { padding: 12px; }
+    .panel { padding: 22px 16px; border-radius: 20px; }
+    .title { font-size: 23px; }
+    .logo { width: 60px; height: 60px; }
+    .logo img { width: 40px; height: 40px; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="main">
+
+    <div class="panel">
+
+        <div class="header">
+
+            <div class="logo">
+                <img src="/static/logo.png" alt="SMS Bomber Logo">
+            </div>
+
+            <div class="title">
+                SMS BOMBER
+            </div>
+
+            <div class="subtitle">
+                HACKER EDITION v3.0 — by amirhhosin
+            </div>
+
+            <div class="status">
+                <span class="dot"></span>
+                READY FOR ATTACK
+            </div>
+
+        </div>
+
+
+        <form id="bomberForm">
+
+            <div class="input-card mb-3">
+
+                <label for="phone">
+                    📱 شماره هدف
+                </label>
+
+                <input
+                    type="text"
+                    id="phone"
+                    class="form-control"
+                    placeholder="09123456789"
+                    required
+                >
+
+            </div>
+
+
+            <div class="row">
+
+                <div class="col-md-6 mb-3">
+
+                    <div class="input-card">
+
+                        <label for="count">
+                            ⚡ تعداد اسپم
+                        </label>
+
+                        <input
+                            type="number"
+                            id="count"
+                            class="form-control"
+                            value="1"
+                            min="1"
+                            max="50"
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <div class="col-md-6 mb-3">
+
+                    <div class="input-card">
+
+                        <label for="threads">
+                            🧵 تعداد ترد
+                        </label>
+
+                        <input
+                            type="number"
+                            id="threads"
+                            class="form-control"
+                            value="10"
+                            min="1"
+                            max="30"
+                        >
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="main-btn w-100 mt-2"
+                id="attackBtn"
+            >
+                🔥 اجرای حمله
+            </button>
+
+        </form>
+
+
+        <div class="mt-4">
+
+            <div class="console-title">
+                <span>ATTACK LOG — amirhhosin</span>
+                <span>● LIVE</span>
+            </div>
+
+            <div
+                class="console"
+                id="output"
+            >⏳ منتظر شروع...</div>
+
+        </div>
+
+
+        <div class="footer">
+            ☠️ POWERED BY <a href="https://github.com/amirhhosin" target="_blank">amirhhosin</a> • EDUCATIONAL USE ONLY
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+// ===== فقط صدای کلیک روی دکمه اجرای حمله =====
+document.getElementById("bomberForm").addEventListener("submit", function(e) {
+    try {
+        const audio = new Audio('/static/click.mp3');
+        audio.play();
+    } catch (e) {
+        // اگه صدا پیدا نشد، خطا نده
+    }
+});
+
+// ===== ارسال فرم به سرور =====
+const form = document.getElementById("bomberForm");
+const output = document.getElementById("output");
+
+form.addEventListener("submit", async function(e) {
+
+    e.preventDefault();
+
+    const phone = document.getElementById("phone").value.trim();
+    const count = document.getElementById("count").value;
+    const threads = document.getElementById("threads").value;
+
+    if (!phone) {
+        output.textContent = "❌ لطفاً شماره هدف را وارد کنید!";
+        return;
+    }
+
+    output.textContent = "⏳ در حال اجرا... لطفاً صبر کنید...";
+
+    try {
+        const response = await fetch("/api/send", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ phone, count, threads })
+        });
+
+        const data = await response.json();
+
+        if (data.error) {
+            output.textContent = "❌ خطا: " + data.error;
+        } else {
+            let resultText = "✅ عملیات با موفقیت انجام شد!\n\n";
+            if (data.output) {
+                resultText += "📊 خروجی:\n" + data.output;
+            }
+            if (data.error) {
+                resultText += "\n\n⚠️ خطاها:\n" + data.error;
+            }
+            output.textContent = resultText;
+        }
+    } catch (err) {
+        output.textContent = "❌ خطا در ارتباط با سرور: " + err.message;
+    }
+});
+
+</script>
+
+</body>
+</html>

